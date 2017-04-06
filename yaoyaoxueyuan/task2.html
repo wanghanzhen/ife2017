@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>task1</title>
+	<style type="text/css">
+		*{
+			font-family: "微软雅黑";
+		}
+		.wrap{
+			margin: 0 auto;
+			width: 1000px;
+			height: 1000px;
+		}
+		label{
+			display: inline-block;
+			width: 150px;
+			font-size: 30px;
+		}
+		input{
+			width: 400px;
+			height: 40px;
+			line-height: 30px;
+			font-size: 25px;
+			border-radius: 5px;
+			outline: none;
+			padding-left: 12px;
+			color: #999;
+		}
+		button{
+			height: 40px;
+			width: 100px;
+			border-radius: 5px;
+			border: none;
+			font-size: 25px;
+			background-color: rgb(47, 121, 186);
+			color: white;
+		}
+		.info{
+			color: #999;
+			font-size: 20px;
+			display: block;
+			margin: 5px 0;
+			margin-left: 155px;
+			visibility: hidden;
+		}
+	</style>
+</head>
+<body>
+	<div class="wrap">
+		<label for="input1">名称：</label>
+		<input type="text" id="input1">
+		<span class="info">必填，长度为4~16个字符</span>
+
+		<label for="input2">密码：</label>
+		<input type="password" id="input2">
+		<span class="info">6到16位数字和字母</span>
+
+		<label for="input3">确认密码：</label>
+		<input type="password" id="input3">
+		<span class="info">重复输入密码</span>
+
+		<label for="input4">邮箱：</label>
+		<input type="text" id="input4">
+		<span class="info">example@haha.com</span>
+
+		<label for="input5">手机：</label>
+		<input type="text" id="input5">
+		<span class="info">请输入11位手机号码</span>
+
+		<button type="submit">验证</button>
+	</div>
+	<script type="text/javascript">
+		var hintText=[{hint:"必填，长度为4~16位字符",right:"名称格式正确",wrong:"名称格式有误",isPassed:false},
+            {hint:"必填，长度为6~16位字符,包含字母和数字",right:"密码可用",wrong:"密码不可用",isPassed:false},
+           	{hint:"必填，必须与密码相同",right:"密码输入一致",wrong:"密码输入不一致",isPassed:false},
+            {hint:"填写正确的邮箱格式",right:"邮箱格式正确",wrong:"邮箱格式错误",isPassed:false},
+            {hint:"请输入11位手机号码",right:"手机格式正确",wrong:"手机格式错误",isPassed:false}];
+
+        function testValue(id){
+        	var input=document.getElementById('input'+id);
+        	var content=document.getElementsByTagName('span')[id-1];
+        	var flag=false;
+        	var value=input.value;
+        	switch(parseInt(id)){
+        		case 1:
+        			flag=(/^[0-9a-zA-Z_]{4,16}$/).test(value.replace(/[\u0391-\uFFE5]/g,'aa'));break;
+        		case 2:
+        			flag=(/^[0-9a-zA-Z_]{6,16}$/).test(value);break;
+        		case 3:
+        			flag=document.getElementById("input2").value===value&&value!=='';break;
+        		case 4:
+        			flag=(/.+@.+\.[a-zA-Z]{2,4}$/).test(value);break;
+        		case 5:
+        			flag=(/^1[0-9]{10}$/).test(value);break;
+        	}
+        	if(flag){
+        		input.style.borderColor='lightgreen';
+        		content.innerHTML=hintText[id-1].right;
+        		content.style.color='lightgreen';
+        		hintText[id-1].isPassed=true;
+        	}
+        	else{
+        		input.style.borderColor='red';
+        		content.innerHTML=hintText[id-1].wrong;
+        		content.style.color='red';
+        		hintText[id-1].isPassed=false;
+        	}
+        }
+        var inputs=document.getElementsByTagName("input");
+        var spans=document.getElementsByTagName("span")
+       	for (var i = 0; i < inputs.length; i++) {
+       		inputs[i].i=i;
+       		inputs[i].onblur=function(){
+       			testValue(this.i+1);
+       		}
+       		inputs[i].onfocus=function(){
+       			this.style.borderColor='';
+       			spans[this.i].style.visibility='visible';
+       			spans[this.i].innerHTML=hintText[this.i].hint;
+       			spans[this.i].style.color='#999';
+       		}
+       	}
+       	var btn=document.getElementsByTagName('button')[0];
+       	btn.onclick=function(e){
+       		var flag=hintText.every(function(item){
+       			return item.isPassed;
+       		})
+       		console.log(hintText);
+       		if(flag){
+       			alert('提交成功');
+       		}
+       		else{
+       			alert('提交失败')
+       		}
+       		return false;
+       	}
+	</script>
+</body>
+</html>
